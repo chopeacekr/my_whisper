@@ -203,7 +203,7 @@ async def recognize(request: RecognizeRequest):
             language=whisper_lang,
             vad_filter=True,           # Voice Activity Detection
             vad_parameters={
-                "threshold": 0.5,      # VAD threshold (낮을수록 민감)
+                "threshold": 0.3,      # VAD threshold (낮을수록 민감)
                 "min_speech_duration_ms": 250,
                 "min_silence_duration_ms": 100,
             },
