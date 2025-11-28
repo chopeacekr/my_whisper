@@ -1,0 +1,17 @@
+[project]
+name = "my-whisper"
+version = "0.1.0"
+description = "Whisper tiny STT server using faster-whisper (CPU)"
+readme = "README.md"
+requires-python = ">=3.11"
+
+dependencies = [
+  # === STT 핵심 ===
+  "faster-whisper",        # tiny, base, small 등 모델 로딩
+  "soundfile",             # sf.read()용 (libsndfile 필요)
+  "numpy",                 # 오디오 배열 처리
+
+  # === API 서버 ===
+  "fastapi",
+  "uvicorn[standard]",
+]
