@@ -1,26 +1,27 @@
 # Whisper STT Server
 
-> 🎤 Fast and accurate Speech-to-Text using faster-whisper
+> 🎤 **Fast and accurate Speech-to-Text using faster-whisper**
 
-OpenAI의 Whisper 모델을 기반으로 한 고성능 음성 인식 서버입니다. faster-whisper를 사용하여 CPU 환경에서도 실용적인 속도를 제공합니다.
+OpenAI의 Whisper 모델을 기반으로 한 고성능 음성 인식 서버입니다. **faster-whisper**를 사용하여 CPU 환경에서도 실용적인 속도를 제공하며, 최신 Python 패키지 매니저인 **uv**를 통해 쉽고 빠르게 설치할 수 있습니다.
 
 ---
 
 ## 📋 목차
 
-- [특징](#특징)
-- [시스템 요구사항](#시스템-요구사항)
-- [설치](#설치)
-- [사용법](#사용법)
-- [API 문서](#api-문서)
-- [성능](#성능)
-- [문제 해결](#문제-해결)
-- [라이센스](#라이센스)
+- [특징](#-특징)
+- [시스템 요구사항](#-시스템-요구사항)
+- [설치 (uv)](#-설치-uv)
+- [사용법](#-사용법)
+- [API 문서](#-api-문서)
+- [성능](#-성능)
+- [문제 해결](#-문제-해결)
+- [라이센스](#-라이센스)
 
 ---
 
 ## ✨ 특징
 
+- **초고속 환경 설정**: `uv`를 통해 의존성 설치 및 가상환경 구성 속도 극대화
 - **높은 정확도**: OpenAI Whisper 모델 기반 (한국어 90%+ 정확도)
 - **빠른 처리**: faster-whisper 최적화로 실시간 대비 4배 빠른 처리
 - **다국어 지원**: 99개 언어 즉시 사용 가능 (추가 모델 다운로드 불필요)
@@ -35,7 +36,7 @@ OpenAI의 Whisper 모델을 기반으로 한 고성능 음성 인식 서버입�
 
 ### 최소 사양
 - **OS**: Ubuntu 20.04+ / Windows 10+ / macOS 10.15+
-- **Python**: 3.8 - 3.11
+- **Python**: 3.8 - 3.12 (uv가 자동 관리)
 - **RAM**: 1GB (Base 모델 기준)
 - **디스크**: 500MB (모델 캐시 포함)
 
@@ -50,47 +51,50 @@ OpenAI의 Whisper 모델을 기반으로 한 고성능 음성 인식 서버입�
 
 ---
 
-## 🚀 설치
+## 🚀 설치 (uv)
 
-### 1. 저장소 클론
+이 프로젝트는 `uv`를 사용하여 의존성을 관리합니다. 복잡한 가상환경 설정 없이 단 두 줄로 설치가 완료됩니다.
+
+### 1. uv 설치 (최초 1회)
+
+이미 `uv`가 설치되어 있다면 건너뛰세요.
+
+**macOS / Linux:**
+```bash
+curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | sh
+```
+
+**Windows (PowerShell):**
+```powershell
+powershell -c "irm [https://astral.sh/uv/install.ps1](https://astral.sh/uv/install.ps1) | iex"
+```
+
+### 2. 저장소 클론 및 동기화
+
+프로젝트를 다운로드하고 `uv sync` 명령어를 실행하면, **가상환경 생성부터 라이브러리 설치까지 자동으로 완료**됩니다.
 
 ```bash
-git clone https://github.com/yourusername/my-whisper.git
+git clone [https://github.com/yourusername/my-whisper.git](https://github.com/yourusername/my-whisper.git)
 cd my-whisper
+
+# 가상환경 생성 및 의존성 설치 (자동)
+uv sync
 ```
 
-### 2. 가상환경 생성 (권장)
+### 3. 모델 다운로드 (자동)
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Linux/Mac
-# .venv\Scripts\activate  # Windows
-```
-
-### 3. 의존성 설치
-
-```bash
-pip install -r requirements.txt
-```
-
-또는 수동 설치:
-
-```bash
-pip install faster-whisper fastapi uvicorn soundfile numpy
-```
-
-### 4. 모델 다운로드 (자동)
-
-첫 실행 시 모델이 자동으로 다운로드됩니다. 수동 다운로드는 불필요합니다.
+서버 첫 실행 시 모델이 자동으로 다운로드됩니다. 수동 다운로드는 불필요합니다.
 
 ---
 
 ## 🎯 사용법
 
-### 기본 실행
+### 서버 실행
+
+`uv run` 명령어를 사용하면 가상환경을 별도로 활성화할 필요 없이 바로 서버가 실행됩니다.
 
 ```bash
-python server_stt.py
+uv run python server_stt.py
 ```
 
 서버가 `http://localhost:8300`에서 시작됩니다.
@@ -215,21 +219,6 @@ result = response.json()
 print(f"인식된 텍스트: {result['text']}")
 ```
 
-**cURL 예시**:
-```bash
-# audio.wav를 Base64로 인코딩
-AUDIO_B64=$(base64 -w 0 audio.wav)
-
-# API 호출
-curl -X POST http://localhost:8300/recognize \
-  -H "Content-Type: application/json" \
-  -d "{
-    \"audio_b64\": \"$AUDIO_B64\",
-    \"lang\": \"KR\",
-    \"sample_rate\": 16000
-  }"
-```
-
 ---
 
 ## 📊 성능
@@ -254,31 +243,6 @@ curl -X POST http://localhost:8300/recognize \
 | Large-v3 | 1550M | 2.9GB | 0.8x 실시간 | 99.1% |
 
 > 💡 **권장**: Base 모델이 속도와 정확도의 최적 균형점
-
-### 리소스 사용량
-
-- **모델 로딩 시간**: 2.35초 (Base 모델)
-- **메모리 사용량**: 400-600MB
-- **CPU 사용량**: 60-80% (단일 코어)
-
----
-
-## 🌍 지원 언어
-
-Whisper는 **99개 언어**를 지원합니다. 주요 언어 코드:
-
-| 언어 | 코드 | 정확도 |
-|------|------|--------|
-| 한국어 | KR | 90%+ |
-| 영어 | EN | 95%+ |
-| 일본어 | JP | 93%+ |
-| 중국어 | ZH | 94%+ |
-| 프랑스어 | FR | 92%+ |
-| 독일어 | DE | 91%+ |
-| 스페인어 | ES | 93%+ |
-| 러시아어 | RU | 90%+ |
-
-전체 목록: [Whisper 공식 문서](https://github.com/openai/whisper#available-models-and-languages)
 
 ---
 
@@ -309,97 +273,29 @@ segments, info = model.transcribe(
 )
 ```
 
-### 3. Beam Search 조정
-
-```python
-segments, info = model.transcribe(
-    audio_data,
-    beam_size=5,  # 1-10 (높을수록 정확하지만 느림)
-    best_of=5,    # beam_size와 동일하게 설정 권장
-    temperature=0.0,  # 0.0 = 결정적, >0 = 확률적
-)
-```
-
 ---
 
 ## 🐛 문제 해결
 
-### 1. 서버가 시작되지 않음
+### 1. 'uv' 명령어를 찾을 수 없음
 
-**증상**:
-```
-ModuleNotFoundError: No module named 'faster_whisper'
-```
+설치 후 터미널을 재시작하지 않아서 발생합니다. 터미널을 껐다 켜거나 `source $HOME/.cargo/env` (Linux/Mac)를 실행하세요.
 
-**해결**:
+### 2. 패키지 설치 오류
+
+`uv sync` 실행 중 오류가 발생하면 캐시를 초기화해 보세요:
+
 ```bash
-pip install faster-whisper --upgrade
+uv cache clean
+uv sync
 ```
 
----
+### 3. GPU 인식 불가
 
-### 2. 모델 다운로드 실패
+CUDA가 설치되어 있음에도 인식이 안 된다면, PyTorch를 CUDA 버전으로 명시적 설치가 필요할 수 있습니다. `pyproject.toml` 설정을 확인하거나 아래 명령어로 재설치합니다:
 
-**증상**:
-```
-HTTPError: 403 Forbidden
-```
-
-**해결**:
-1. 인터넷 연결 확인
-2. 프록시 설정 확인
-3. Hugging Face 접근 가능 여부 확인
-
----
-
-### 3. 빈 텍스트 반환
-
-**증상**:
-```json
-{"text": "", "language": "ko"}
-```
-
-**원인**:
-- 오디오가 너무 조용함
-- 배경 소음만 있고 음성 없음
-- 샘플레이트 불일치
-
-**해결**:
-1. 오디오 볼륨 확인
-2. VAD threshold 낮추기 (0.5 → 0.3)
-3. 오디오를 16kHz로 리샘플링
-
----
-
-### 4. 처리 속도가 너무 느림
-
-**원인**:
-- CPU 성능 부족
-- 큰 모델 사용 (Medium/Large)
-
-**해결**:
-1. Tiny 또는 Base 모델로 변경
-2. GPU 사용 설정
-3. 긴 오디오는 청킹 처리
-
----
-
-### 5. GPU를 사용하고 싶은데 인식 안 됨
-
-**확인**:
-```python
-import torch
-print(torch.cuda.is_available())  # True여야 함
-```
-
-**해결**:
 ```bash
-# CUDA 버전 확인
-nvidia-smi
-
-# PyTorch CUDA 재설치
-pip uninstall torch
-pip install torch --index-url https://download.pytorch.org/whl/cu118
+uv pip install torch --index-url [https://download.pytorch.org/whl/cu118](https://download.pytorch.org/whl/cu118)
 ```
 
 ---
@@ -409,10 +305,11 @@ pip install torch --index-url https://download.pytorch.org/whl/cu118
 ```
 my-whisper/
 ├── server_stt.py           # FastAPI 서버 메인
-├── requirements.txt        # 의존성 목록
-├── README.md              # 이 문서
-├── .gitignore             # Git 무시 파일
-└── models/                # 모델 캐시 (자동 생성)
+├── pyproject.toml          # 프로젝트 및 의존성 설정 (uv)
+├── uv.lock                 # 의존성 버전 잠금 파일
+├── README.md               # 이 문서
+├── .python-version         # Python 버전 명시
+└── models/                 # 모델 캐시 (자동 생성)
     └── base/
 ```
 
@@ -427,21 +324,6 @@ my-whisper/
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
----
-
-## 📚 참고 자료
-
-### 공식 문서
-- [OpenAI Whisper](https://github.com/openai/whisper)
-- [faster-whisper](https://github.com/SYSTRAN/faster-whisper)
-- [CTranslate2](https://github.com/OpenNMT/CTranslate2)
-- [FastAPI](https://fastapi.tiangolo.com/)
-
-### 관련 프로젝트
-- [whisper.cpp](https://github.com/ggerganov/whisper.cpp) - C++ 구현
-- [WhisperX](https://github.com/m-bain/whisperX) - 타임스탬프 정렬
-- [Insanely Fast Whisper](https://github.com/Vaibhavs10/insanely-fast-whisper) - 배치 최적화
 
 ---
 
@@ -462,14 +344,6 @@ Whisper 모델 자체는 OpenAI의 라이센스를 따릅니다.
 
 ---
 
-## 🙏 감사의 말
-
-- OpenAI Whisper 팀
-- faster-whisper 개발자들
-- FastAPI 커뮤니티
-
----
-
-> 📅 최종 업데이트: 2024.11.28
-> 
-> 🏷️ **태그**: #STT #Whisper #FastAPI #음성인식 #AI
+> 📅 최종 업데이트: 2024.12.04
+>
+> 🏷️ **태그**: #STT #Whisper #FastAPI #uv #음성인식 #AI
