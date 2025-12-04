@@ -74,7 +74,7 @@ powershell -c "irm [https://astral.sh/uv/install.ps1](https://astral.sh/uv/insta
 프로젝트를 다운로드하고 `uv sync` 명령어를 실행하면, **가상환경 생성부터 라이브러리 설치까지 자동으로 완료**됩니다.
 
 ```bash
-git clone [https://github.com/yourusername/my-whisper.git](https://github.com/yourusername/my-whisper.git)
+git clone [https://github.com/chopeacekr/my-whisper.git](https://github.com/chopeacekr/my-whisper.git)
 cd my-whisper
 
 # 가상환경 생성 및 의존성 설치 (자동)
